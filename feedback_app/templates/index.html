@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Creative Feedback Hub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Creative Header -->
+        <header class="creative-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <i class="fas fa-comments header-icon"></i>
+                    <h1 class="glitch-text">Feedback Hub</h1>
+                </div>
+                <p class="header-subtitle">Your voice matters! Share your experience with us</p>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-users"></i>
+                        <span class="stat-number" data-target="1247">0</span>
+                        <span class="stat-label">Happy Users</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-star"></i>
+                        <span class="stat-number" data-target="4.8">0</span>
+                        <span class="stat-label">Avg Rating</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }} animate-slide-in">
+                            <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' }}"></i>
+                            {{ message }}
+                            <button class="flash-close">&times;</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Creative Form -->
+        <form action="{{ url_for('submit_feedback') }}" method="POST" class="creative-form">
+            <div class="form-section">
+                <h3><i class="fas fa-user-circle"></i> Personal Information</h3>
+                
+                <div class="form-row">
+                    <div class="form-group animate-fade-in" style="animation-delay: 0.1s">
+                        <label for="name"><i class="fas fa-user"></i> Full Name *</label>
+                        <input type="text" id="name" name="name" required placeholder="What should we call you?">
+                        <div class="input-underline"></div>
+                    </div>
+
+                    <div class="form-group animate-fade-in" style="animation-delay: 0.2s">
+                        <label for="email"><i class="fas fa-envelope"></i> Email Address *</label>
+                        <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                        <div class="input-underline"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fas fa-tags"></i> Feedback Category</h3>
+                <div class="category-grid animate-fade-in" style="animation-delay: 0.3s">
+                    <input type="radio" id="cat-general" name="category" value="General" checked>
+                    <label for="cat-general" class="category-card">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>General</span>
+                    </label>
+
+                    <input type="radio" id="cat-bug" name="category" value="Bug Report">
+                    <label for="cat-bug" class="category-card">
+                        <i class="fas fa-bug"></i>
+                        <span>Bug Report</span>
+                    </label>
+
+                    <input type="radio" id="cat-feature" name="category" value="Feature Request">
+                    <label for="cat-feature" class="category-card">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Feature Request</span>
+                    </label>
+
+                    <input type="radio" id="cat-ui" name="category" value="UI/UX">
+                    <label for="cat-ui" class="category-card">
+                        <i class="fas fa-paint-brush"></i>
+                        <span>UI/UX</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fas fa-star"></i> Rate Your Experience</h3>
+                <div class="rating-section animate-fade-in" style="animation-delay: 0.4s">
+                    <div class="star-rating">
+                        <input type="radio" id="star-1" name="rating" value="1">
+                        <label for="star-1" class="star"><i class="fas fa-star"></i></label>
+                        
+                        <input type="radio" id="star-2" name="rating" value="2">
+                        <label for="star-2" class="star"><i class="fas fa-star"></i></label>
+                        
+                        <input type="radio" id="star-3" name="rating" value="3">
+                        <label for="star-3" class="star"><i class="fas fa-star"></i></label>
+                        
+                        <input type="radio" id="star-4" name="rating" value="4">
+                        <label for="star-4" class="star"><i class="fas fa-star"></i></label>
+                        
+                        <input type="radio" id="star-5" name="rating" value="5" checked>
+                        <label for="star-5" class="star"><i class="fas fa-star"></i></label>
+                    </div>
+                    <div class="rating-labels">
+                        <span>Terrible</span>
+                        <span>Poor</span>
+                        <span>Average</span>
+                        <span>Good</span>
+                        <span>Excellent</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3><i class="fas fa-comment-alt"></i> Share Your Thoughts</h3>
+                <div class="form-group animate-fade-in" style="animation-delay: 0.5s">
+                    <textarea id="feedback" name="feedback" required 
+                              placeholder="Tell us about your experience... What did you love? What could be better?"
+                              rows="6"></textarea>
+                    <div class="char-counter">
+                        <span id="char-count">0</span> / 1000 characters
+                    </div>
+                </div>
+            </div>
+
+            <div class="submit-section animate-fade-in" style="animation-delay: 0.6s">
+                <button type="submit" class="creative-submit-btn">
+                    <span class="btn-text">
+                        <i class="fas fa-paper-plane"></i>
+                        Send Feedback
+                    </span>
+                    <div class="btn-loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        Submitting...
+                    </div>
+                </button>
+            </div>
+        </form>
+
+        <!-- Creative Footer -->
+        <footer class="creative-footer">
+            <div class="footer-content">
+                <p><i class="fas fa-heart text-red"></i> Thank you for helping us improve!</p>
+                <div class="footer-links">
+                    <a href="/admin" class="footer-link">
+                        <i class="fas fa-chart-bar"></i> Admin Dashboard
+                    </a>
+                    <a href="/api/feedback" class="footer-link">
+                        <i class="fas fa-code"></i> API Access
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form handling
+            const form = document.querySelector('.creative-form');
+            const submitBtn = document.querySelector('.creative-submit-btn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoading = submitBtn.querySelector('.btn-loading');
+
+            // Character counter
+            const textarea = document.getElementById('feedback');
+            const charCount = document.getElementById('char-count');
+            
+            textarea.addEventListener('input', function() {
+                const count = this.value.length;
+                charCount.textContent = Math.min(count, 1000);
+                if (count > 1000) {
+                    this.value = this.value.substring(0, 1000);
+                }
+            });
+
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                btnText.style.display = 'none';
+                btnLoading.style.display = 'flex';
+                submitBtn.disabled = true;
+            });
+
+            // Flash message handling
+            const flashMessages = document.querySelectorAll('.flash');
+            flashMessages.forEach(function(message) {
+                const closeBtn = message.querySelector('.flash-close');
+                closeBtn.addEventListener('click', function() {
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateX(100%)';
+                    setTimeout(() => message.remove(), 300);
+                });
+
+                // Auto-hide after 7 seconds
+                setTimeout(function() {
+                    if (message.parentNode) {
+                        message.style.opacity = '0';
+                        message.style.transform = 'translateX(100%)';
+                        setTimeout(() => message.remove(), 300);
+                    }
+                }, 7000);
+            });
+
+            // Animate stats counter
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(function(stat) {
+                const target = parseFloat(stat.getAttribute('data-target'));
+                const increment = target / 100;
+                let current = 0;
+                
+                const timer = setInterval(function() {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    stat.textContent = target % 1 === 0 ? Math.floor(current) : current.toFixed(1);
+                }, 20);
+            });
+
+            // Star rating interaction
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(function(star, index) {
+                star.addEventListener('mouseenter', function() {
+                    highlightStars(index + 1);
+                });
+                
+                star.addEventListener('mouseleave', function() {
+                    const checked = document.querySelector('input[name="rating"]:checked');
+                    if (checked) {
+                        highlightStars(parseInt(checked.value));
+                    }
+                });
+            });
+
+            function highlightStars(rating) {
+                stars.forEach(function(star, index) {
+                    if (index + 1 <= rating) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+            }
+
+            // Initialize star rating
+            const checkedRating = document.querySelector('input[name="rating"]:checked');
+            if (checkedRating) {
+                highlightStars(parseInt(checkedRating.value));
+            }
+        });
+    </script>
+</body>
+</html>

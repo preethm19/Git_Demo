@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Admin Dashboard - Feedback Hub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .admin-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .feedback-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .feedback-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .feedback-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-heavy);
+        }
+        
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .rating-display {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .star-filled {
+            color: #ffd700;
+        }
+        
+        .star-empty {
+            color: #ddd;
+        }
+        
+        .category-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .category-general { background: #e3f2fd; color: #1976d2; }
+        .category-bug { background: #ffebee; color: #d32f2f; }
+        .category-feature { background: #f3e5f5; color: #7b1fa2; }
+        .category-ui { background: #e8f5e8; color: #388e3c; }
+        
+        .feedback-content {
+            margin: 15px 0;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+        
+        .feedback-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            margin: 0 15px;
+            padding: 12px 25px;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+    </div>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fas fa-chart-bar"></i> Admin Dashboard</h1>
+            <p>Manage and review all feedback submissions</p>
+        </div>
+
+        <div class="nav-links">
+            <a href="/" class="nav-link">
+                <i class="fas fa-home"></i> Back to Form
+            </a>
+            <a href="/api/feedback" class="nav-link">
+                <i class="fas fa-code"></i> API Data
+            </a>
+        </div>
+
+        {% if submissions %}
+            <div class="feedback-grid">
+                {% for submission in submissions %}
+                <div class="feedback-card">
+                    <div class="feedback-header">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                {{ submission.name[0].upper() }}
+                            </div>
+                            <div>
+                                <strong>{{ submission.name }}</strong><br>
+                                <small>{{ submission.email }}</small>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div class="rating-display">
+                                {% for i in range(1, 6) %}
+                                    <i class="fas fa-star {{ 'star-filled' if i <= submission.rating else 'star-empty' }}"></i>
+                                {% endfor %}
+                                <span style="margin-left: 5px; font-weight: bold;">{{ submission.rating }}/5</span>
+                            </div>
+                            <span class="category-badge category-{{ submission.category.lower().replace(' ', '-') }}">
+                                {{ submission.category }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="feedback-content">
+                        "{{ submission.feedback }}"
+                    </div>
+                    
+                    <div class="feedback-meta">
+                        <span>
+                            <i class="fas fa-calendar"></i>
+                            {{ submission.timestamp }}
+                        </span>
+                        <span>
+                            <i class="fas fa-hashtag"></i>
+                            ID: {{ submission.id }}
+                        </span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h3>No feedback submissions yet</h3>
+                <p>When users submit feedback, it will appear here.</p>
+                <a href="/" class="nav-link" style="margin-top: 20px;">
+                    <i class="fas fa-plus"></i> Add First Feedback
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
