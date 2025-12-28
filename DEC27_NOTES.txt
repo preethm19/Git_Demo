@@ -1,0 +1,8 @@
+Version Control using GIT
+
+-Git is an open-source, local version control system, while GitHub and GitLab are web-based platforms that host Git repositories and offer additional  
+ collaboration and DevOps tools. 
+-SCM - Source Code Management
+-Margret Hamilton
+-FORTRON, QBASIC, PASCAL , COBOL 
+-extra 5 marks in 4th sem
